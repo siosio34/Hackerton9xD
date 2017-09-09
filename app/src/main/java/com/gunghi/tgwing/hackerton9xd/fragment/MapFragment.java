@@ -27,7 +27,6 @@ import net.daum.mf.map.api.MapView;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,7 +81,6 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
                 if(response.isSuccessful()) {
                     int count = 0;
                     ResKakaoLocalAPI body = response.body();
-                    List<ResKakaoLocalAPI.Document> documents = body.getDocuments();
 
                     for (ResKakaoLocalAPI.Document item : response.body().getDocuments()) {
                         MapPOIItem mapPOIItem = new MapPOIItem();

@@ -36,14 +36,14 @@ public interface KakaoService {
             @Query("query") String query
     );
 
-    @GET("http://p.winterj.me:9090/get/daum/653245473/blogReview")
-    Call<ResKakaoBlog> getBlogData();
+    @GET("http://p.winterj.me:9090/get/daum/{id}/blogReview")
+    Call<ResKakaoBlog> getBlogData(String id);
 
-    @GET("http://p.winterj.me:9090/get/daum/653245473/photo")
-    Call<ResKakaoPhoto> getPhotoData();
+    @GET("http://p.winterj.me:9090/get/daum/{id}/photo")
+    Call<ResKakaoPhoto> getPhotoData(String id);
 
-    @GET("http://p.winterj.me:9090/get/daum/653245473/basicInfo")
-    Call<ResKakaoBasicInfo> getBasicInfoData();
+    @GET("http://p.winterj.me:9090/get/daum/{id}/basicInfo")
+    Call<ResKakaoBasicInfo> getBasicInfoData(String id);
 
 
 
