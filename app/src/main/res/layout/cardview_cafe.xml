@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mapRestaurantWrapper"
+    android:layout_width="323dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginBottom="6dp"
+    android:background="@drawable/cardview_cafe">
+
+    <ImageView
+        android:id="@+id/mapRestaurantImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:scaleType="fitXY"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+        android:id="@+id/mapRestaurantName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="6dp"
+        android:maxWidth="160dp"
+        android:singleLine="true"
+        android:textSize="18sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/mapRestaurantImageView"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/mapRestaurantFoodTag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:maxWidth="100dp"
+        android:singleLine="true"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintLeft_toRightOf="@+id/mapRestaurantImageView"
+        app:layout_constraintTop_toBottomOf="@+id/mapRestaurantName" />
+    <TextView
+        android:id="@+id/mapRestaurantAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="200dp"
+        android:singleLine="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:textSize="12sp"
+        android:textColor="#95989A"
+        app:layout_constraintLeft_toRightOf="@+id/mapRestaurantImageView"
+        app:layout_constraintTop_toBottomOf="@+id/mapRestaurantFoodTag" />
+    <android.support.v7.widget.AppCompatRatingBar
+        android:id="@+id/mapRestaurantRatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="4"
+        android:stepSize="0.1"
+        android:theme="@style/RatingBar"
+        style="?attr/ratingBarStyleSmall"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/mapRestaurantDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:textSize="14sp"
+        android:textColor="#95989A"
+        app:layout_constraintTop_toBottomOf="@+id/mapRestaurantName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/mapRestaurantName" />
+
+
+</android.support.constraint.ConstraintLayout>
