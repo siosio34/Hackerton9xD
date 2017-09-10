@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.gunghi.tgwing.hackerton9xd.fragment.MapFragment;
+import com.gunghi.tgwing.hackerton9xd.fragment.RankingFragment;
 import com.gunghi.tgwing.hackerton9xd.fragment.SwipeCafeFragment;
 import com.gunghi.tgwing.hackerton9xd.util.LocationTracker;
 
@@ -67,9 +68,11 @@ public class MainActivity extends AppCompatActivity {
 
         MapFragment mapFragment = new MapFragment();
         SwipeCafeFragment swipeCafeFragment = new SwipeCafeFragment();
+        RankingFragment rankingFragment = new RankingFragment();
+
         currentSelectedFragment = swipeCafeFragment;
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.container,swipeCafeFragment).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container,currentSelectedFragment).commit();
     }
 
     private void requestGetMyLocation() {

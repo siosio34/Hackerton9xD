@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.daimajia.slider.library.SliderLayout;
 import com.gunghi.tgwing.hackerton9xd.R;
 import com.gunghi.tgwing.hackerton9xd.application.Hackerton9xdApplication;
 import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoBasicInfo;
@@ -25,9 +26,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class SwipeCafeFragment extends Fragment {
+public class SwipeCafeFragment extends Fragment{
 
     private ArrayList<String> idList = new ArrayList<>();
+    private SliderLayout mDemoSlider;
+    private View rootView;
 
     public SwipeCafeFragment() {
 
@@ -35,10 +38,15 @@ public class SwipeCafeFragment extends Fragment {
     }
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         getLocaleIdList();
+
+
 //        //idList = getLocaleIdList();
 
 //        Retrofit retrofit =  Hackerton9xdApplication.getRetrofitByServer();
@@ -112,8 +120,12 @@ public class SwipeCafeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
+        rootView = inflater.inflate(R.layout.fragment_swipe_cafe, container, false);
+        mDemoSlider = (SliderLayout)rootView.findViewById(R.id.slider);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_swipe_cafe, container, false);
+        return rootView;
     }
 
 
@@ -152,7 +164,7 @@ public class SwipeCafeFragment extends Fragment {
                         int len = url.length;
                         idList.add(url[len-1]);
                     }
-                    Log.d("response", idList.toString());
+                    getDetailedLocalData(0);
                 }
             }
 
@@ -163,13 +175,12 @@ public class SwipeCafeFragment extends Fragment {
         });
     }
 
-
     private void getDetailedLocalData(int index) {
         Retrofit retrofit =  Hackerton9xdApplication.getRetrofitByServer();
         KakaoService kakaoService = retrofit.create(KakaoService.class);
 
-        // 베이식 인포
-        final Call<ResKakaoBasicInfo> call = kakaoService.getBasicInfoData(idList.get(index));
+
+        final Call<ResKakaoBasicInfo> call = kakaoService.getBasicInfoData(idList.get(0));
         call.enqueue(new Callback<ResKakaoBasicInfo>() {
             @Override
             public void onResponse(Call<ResKakaoBasicInfo> call, Response<ResKakaoBasicInfo> response) {
@@ -188,6 +199,7 @@ public class SwipeCafeFragment extends Fragment {
                 Log.d("Falied", call.toString());
             }
         });
+
 
         // 블로그
         final Call<ResKakaoBlog> call2 = kakaoService.getBlogData(idList.get(index));
@@ -231,4 +243,6 @@ public class SwipeCafeFragment extends Fragment {
         });
 
     }
+
+
 }

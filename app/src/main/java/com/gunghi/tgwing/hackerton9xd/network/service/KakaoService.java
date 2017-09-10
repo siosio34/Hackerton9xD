@@ -5,10 +5,12 @@ import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoBlog;
 import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoKeywordAPI;
 import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoLocalAPI;
 import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoPhoto;
+import com.gunghi.tgwing.hackerton9xd.network.response.ResRanking;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -17,10 +19,7 @@ import retrofit2.http.Query;
 
 public interface KakaoService {
 
-   // https://dapi.kakao.com/v2/local/search/category.json?category_group_code=CE7&rect=127.0561466,37.5058277,127.0602340,37.5142554
-    //      @Query("radius") int radius
-
-
+    // 다음 api.
     @GET("/v2/local/search/category.json")
     Call<ResKakaoLocalAPI> getCafeList(
             @Header("Authorization") String apikey,
@@ -36,16 +35,20 @@ public interface KakaoService {
             @Query("query") String query
     );
 
+    @GET("http://p.winterj.me:9090/get/daum/{id}/basicInfo")
+    Call<ResKakaoBasicInfo> getBasicInfoData(@Path("id") String id);
+
+    // 상세 url.
     @GET("http://p.winterj.me:9090/get/daum/{id}/blogReview")
-    Call<ResKakaoBlog> getBlogData(String id);
+    Call<ResKakaoBlog> getBlogData(@Path("id")String id);
 
     @GET("http://p.winterj.me:9090/get/daum/{id}/photo")
-    Call<ResKakaoPhoto> getPhotoData(String id);
-
-    @GET("http://p.winterj.me:9090/get/daum/{id}/basicInfo")
-    Call<ResKakaoBasicInfo> getBasicInfoData(String id);
+    Call<ResKakaoPhoto> getPhotoData(@Path("id")String id);
 
 
 
+    // 랭킹 리스트.
+    @GET("http://p.winterj.me:9090/get/rank")
+    Call<ResRanking> getRankingData();
 
 }

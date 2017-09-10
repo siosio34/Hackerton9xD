@@ -1,7 +1,8 @@
 package com.gunghi.tgwing.hackerton9xd.fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -17,15 +18,15 @@ import android.widget.TextView;
 import com.gunghi.tgwing.hackerton9xd.R;
 import com.gunghi.tgwing.hackerton9xd.application.Hackerton9xdApplication;
 import com.gunghi.tgwing.hackerton9xd.network.response.ResKakaoLocalAPI;
+import com.gunghi.tgwing.hackerton9xd.network.response.ResRanking;
 import com.gunghi.tgwing.hackerton9xd.network.service.KakaoService;
 import com.gunghi.tgwing.hackerton9xd.util.LocationTracker;
+import com.squareup.picasso.Picasso;
 
 import net.daum.mf.map.api.MapPOIItem;
 import net.daum.mf.map.api.MapPoint;
 import net.daum.mf.map.api.MapView;
 
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -33,20 +34,38 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.gunghi.tgwing.hackerton9xd.R.id.mapRestaurantRecyclerView;
 
-public class MapFragment extends Fragment implements MapView.MapViewEventListener{
+
+public class MapFragment extends Fragment implements MapView.MapViewEventListener, MapView.POIItemEventListener{
+
+    private RecyclerView mapCafeRecyclerView;
+    private RecyclerView.Adapter mapCafeAdapter;
+    private ArrayList<ResKakaoLocalAPI.Document> documents;
+    private ArrayList<String> imageurlList;
+   
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         initMapView(rootView);
+
+        //for restaurant list
+        mapCafeRecyclerView = (RecyclerView)rootView.findViewById(mapRestaurantRecyclerView);
+        mapCafeRecyclerView.setHasFixedSize(true);
+        documents = new ArrayList<>();
+        imageurlList = new ArrayList<>();
+        mapCafeAdapter = new MapRestaurantAdapter(documents, getContext(), inflater);
+        mapCafeRecyclerView.setAdapter(mapCafeAdapter);
+
         return rootView;
     }
 
     private void initMapView(View rootView) {
         MapView mapView = new MapView(getActivity());
         mapView.setMapViewEventListener(this);
+        mapView.setPOIItemEventListener(this);
         ViewGroup mapViewContainer = (ViewGroup) rootView.findViewById(R.id.map_view);
         mapViewContainer.addView(mapView);
     }
@@ -65,8 +84,43 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
         marker.setMarkerType(MapPOIItem.MarkerType.BluePin); // 기본으로 제공하는 BluePin 마커 모양.
         mapView.addPOIItem(marker);
 
-        getKakaoAPI(mapView, lat.toString(),lon.toString(),10000);
+        getData(mapView);
+       // getKakaoAPI(mapView,lat.toString(),lon.toString(),10000);
 
+    }
+
+    private void getData(final MapView mapview) {
+        final Double lat = LocationTracker.getCurLoc().getLatitude();
+        final Double lon = LocationTracker.getCurLoc().getLongitude();
+
+        Retrofit retrofit =  Hackerton9xdApplication.getRetrofitByServer();
+        KakaoService serverService = retrofit.create(KakaoService.class);
+
+        String keyword = "선릉";
+
+        final Call<ResRanking> call = serverService.getRankingData();
+        call.enqueue(new Callback<ResRanking>() {
+            @Override
+            public void onResponse(Call<ResRanking> call, Response<ResRanking> response) {
+
+                if(response.isSuccessful()) {
+                   for(int i = 0 ; i< response.body().getRankingList().size() ; i++) {
+                       imageurlList.add(response.body().getRankingList().get(i).getPhotoUrl());
+                   }
+
+                   Log.d("imageList", String.valueOf(imageurlList));
+
+                    getKakaoAPI(mapview, lat.toString(),lon.toString(),10000);
+
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResRanking> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getKakaoAPI(final MapView mapView, String x, String y, int radius) {
@@ -90,8 +144,11 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
                         mapPOIItem.setMarkerType(MapPOIItem.MarkerType.RedPin);
 
                         mapView.addPOIItem(mapPOIItem);
+                        documents.add(item);
                         count++;
                     }
+
+                    mapCafeAdapter.notifyDataSetChanged();
                 }
 
             }
@@ -144,14 +201,25 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
 
     }
 
-    public static Drawable LoadImageFromWebOperations(String url) {
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    public void onPOIItemSelected(MapView mapView, MapPOIItem mapPOIItem) {
+        mapView.setMapCenterPoint(mapPOIItem.getMapPoint() , true);
+        mapCafeRecyclerView.scrollToPosition(mapPOIItem.getTag());
+    }
+
+    @Override
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem) {
+
+    }
+
+    @Override
+    public void onCalloutBalloonOfPOIItemTouched(MapView mapView, MapPOIItem mapPOIItem, MapPOIItem.CalloutBalloonButtonType calloutBalloonButtonType) {
+
+    }
+
+    @Override
+    public void onDraggablePOIItemMoved(MapView mapView, MapPOIItem mapPOIItem, MapPoint mapPoint) {
+
     }
 
 
@@ -180,13 +248,16 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
             holder.cafeWrapper.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    RestaurantInfo.setCurrentRestaurantInfo(restaurantInfo);
-//                    Intent intent = new Intent(getActivity(), RestaurantActivity.class);
-//                    startActivity(intent);
+                    Uri uri = Uri.parse(cafeInfo.getPlaceUrl());
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 }
             });
 
-           // Picasso.with(context).load(cafeInfo.).into(holder.cafeImageView);
+            if(position < 10) {
+                Picasso.with(context).load(imageurlList.get(position)).into(holder.cafeImageView);
+
+            }
             holder.cafeName.setText((position+1) + ". " + cafeInfo.getPlaceName());
             holder.cafeAddress.setText(cafeInfo.getAddressName());
 
@@ -212,7 +283,6 @@ public class MapFragment extends Fragment implements MapView.MapViewEventListene
             public TextView         cafeDistance;
 
             public ViewHolder(View view) {
-
                 super(view);
                cafeWrapper = (ConstraintLayout)view.findViewById(R.id.mapRestaurantWrapper);
                cafeImageView = (ImageView)view.findViewById(R.id.mapRestaurantImageView);

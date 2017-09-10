@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.gunghi.tgwing.hackerton9xd"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -25,6 +25,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile files('libs/libDaumMapAndroid.jar')
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.3.1'
@@ -33,7 +34,11 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    compile "com.android.support:support-v4:25.3.1"
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
     testCompile 'junit:junit:4.12'
 }
